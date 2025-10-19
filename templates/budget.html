@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracking - Construction Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Basic Reset and Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+        }
+
+        /* Header */
+        header {
+            background-color: #004e92;
+            padding: 15px;
+            text-align: center;
+            font-size: 2rem;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #004e92;
+            padding: 10px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            margin: 40px auto;
+            padding: 20px;
+            max-width: 1400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #e0e0e0;
+        }
+
+        /* Budget Tracking Form */
+        .budget-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .budget-form input, .budget-form select, .budget-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #fff;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .budget-form label {
+            text-align: left;
+            font-size: 1.3rem;
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .budget-form button {
+            padding: 15px 20px;
+            background-color: #00c6ff;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.3rem;
+            width: 100%;
+        }
+        .budget-form button:hover {
+            background-color: #00a1cc;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: #004e92;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .navbar .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .container {
+                padding-left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        Budget Tracking - Construction Management System
+    </header>
+
+    <!-- Top Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('register') }}">Register</a>
+      <a href="{{ url_for('about') }}">About Us</a>
+      <a href="{{ url_for('contact') }}">Contact Us</a>
+      <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Budget Tracking</h1>
+
+        <!-- Budget Tracking Form -->
+        <div class="budget-form">
+            <form id="budgetForm" action="/submit_budget" method="POST"> 
+                <label for="budgetTitle">Budget Title</label>
+                <input type="text" id="budgetTitle" name="budgetTitle" placeholder="Enter Budget Title" required>
+
+                <label for="budgetAmount">Amount</label>
+                <input type="number" id="budgetAmount" name="budgetAmount" placeholder="Enter Amount" required>
+
+                <label for="budgetDate">Date</label>
+                <input type="date" id="budgetDate" name="budgetDate" required>
+
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="construction">Construction</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="plumbing">Plumbing</option>
+                </select>
+
+                <label for="budgetDescription">Description</label>
+                <textarea id="budgetDescription" name="budgetDescription" placeholder="Enter Budget Description" rows="4" required></textarea>
+
+                <button type="submit">Add Budget</button>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{{ category }}-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </form>
+
+           
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Construction Management System | All rights reserved.</p>
+    </footer>
+        
+        
+</body>
+</html>

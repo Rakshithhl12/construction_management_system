@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Basic Reset and Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+        }
+
+        /* Header */
+        header {
+            background-color: #004e92;
+            padding: 15px;
+            text-align: center;
+            font-size: 2rem;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #004e92;
+            padding: 10px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            margin: 40px auto;
+            padding: 20px;
+            max-width: 1400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #e0e0e0;
+        }
+
+        /* Vastu-Compliant Plan Generator Styling */
+        .vastu-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .vastu-form input, .vastu-form select, .vastu-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #fff;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .vastu-form label {
+            text-align: left;
+            font-size: 1.3rem;
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .vastu-form button {
+            padding: 15px 20px;
+            background-color: #00c6ff;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.3rem;
+            width: 100%;
+            margin-top: 10px; /* Add margin for spacing between buttons */
+        }
+        .vastu-form button:hover {
+            background-color: #00a1cc;
+        }
+
+        /* Floor Plan and 3D View */
+        #floorPlan {
+            display: grid;
+            grid-template-columns : repeat(4, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            color: black;
+        }
+
+        .room {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        /* Color codes for rooms based on Vastu principles */
+        .bedroom { background-color: #7B68EE; }  /* Northwest */
+        .washroom { background-color: #FF6347; } /* West/Southwest */
+        .kitchen { background-color: #FFD700; } /* Southeast */
+        .pooja { background-color: #20B2AA; }   /* Northeast */
+        .livingRoom { background-color: #48D1CC; } /* Center */
+        .hall { background-color: #FF4500; }    /* Hall */
+        .dining { background-color: #3CB371; }   /* Dining Hall */
+        .steps { background-color: #8B0000; }   /* Steps area */
+        .garden { background-color: #228B22; }  /* Outdoor area */
+
+        /* Styling for windows and doors */
+        .window, .door {
+            position: absolute;
+            background-color: #FFFFFF;
+            color: black;
+            font-size: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .window { background-color: #87CEEB; }
+        .door { background-color: #8B4513; }
+
+        /* Window positions */
+        .window-left { left: -20px; top: 50%; transform: translateY(-50%); }
+        .window-right { right: -20px; top: 50%; transform: translateY(-50%); }
+        
+        /* Door positions */
+        .door-top { top: -20px; left: 50%; transform: translateX(-50%); }
+        .door-bottom { bottom: -20px; left: 50%; transform: translateX(-50%); }
+
+        /* 3D Visualization */
+        .threeD {
+            perspective: 1000px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .room-3D {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .room-3D:hover {
+            transform: rotateY(10deg);
+        }
+
+        .room-3D > div {
+            position: absolute;
+            backface-visibility: hidden;
+        }
+
+        .front { background: #FF6347; width: 100%; height: 100%; } /* Front face */
+        .back { background: #228B22; transform: rotateY(180deg); width: 100%; height: 100%; } /* Back face */
+        .left { background: #FFD700; transform: rotateY(-90deg); width: 100%; height: 100%; } /* Left face */
+        .right { background: #20B2AA; transform: rotateY(90deg); width: 100%; height: 100%; } /* Right face */
+        .top { background: #7B68EE; transform: rotateX(90deg); width: 100%; height: 100%; } /* Top face */
+        .bottom { background: #3CB371; transform: rotateX(-90deg); width: 100%; height: 100%; } /* Bottom face */
+
+        /* Footer Section */
+        footer {
+            background-color: #004e92;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .navbar .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .container {
+                padding-left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        Construction Management System
+    </header>
+
+    <!-- Top Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Vastu-Compliant Plan Generator</h1>
+
+        <!-- Vastu-Compliant Plan Generator Form -->
+        <div class="vastu-form">
+            <form id="planForm">
+                <label>Plot Width (m):</label>
+                <input type="number" id="plotWidth" name="plotWidth" min="1" placeholder="e.g., 15" required>
+
+                <label>Plot Length (m):</label>
+                <input type="number" id="plotLength" name="plotLength" min="1" placeholder="e.g., 20" required>
+
+                <label>Number of Floors:</label>
+                <input type="number" id="numFloors" name="numFloors" min="1" placeholder="e.g., 2" required>
+
+                <label>Bedrooms (Northwest):</label>
+                <input type="number" id="rooms" name="rooms" min="1" placeholder="e.g., 3" required>
+
+                <label>Washrooms (West/Southwest):</label>
+                <input type="number" id="washrooms" name="washrooms" min="1" placeholder="e.g., 2" required>
+
+                <label>Kitchens (Southeast):</label>
+                <input type="number" id="kitchen" name="kitchen" min="1" placeholder="e.g., 1" required>
+
+                <label>Pooja Rooms (Northeast):</label>
+                <input type="number" id="pooja" name="pooja" min="0" placeholder="e.g., 1" required>
+
+                <label>Living Rooms (Center):</label>
+                <input type="number" id="livingRoom" name="livingRoom" min="1" placeholder="e.g., 1" required>
+                
+                <label>Hall:</label>
+                <input type="number" id="hall" name="hall" min="1" placeholder="e.g., 1" required>
+
+                <label>Dining Hall:</label>
+                <input type="number" id="dining" name="dining" min="1" placeholder="e.g., 1" required>
+
+                <label>Steps Area (m²):</label>
+                <input type="number" id="stepsArea" name="stepsArea" min="0" placeholder="e.g., 5" required>
+
+                <label>Garden Area (m²):</label>
+                <input type="number" id="gardenArea" name="gardenArea" min="0" placeholder="e.g., 20" required>
+
+                <button type="button" onclick="generatePlan()">Generate Plan</button>
+                <button type="button" onclick="printPlan()">Print Plan</button>
+            </form>
+
+            <h2>2D Floor Plan</h2>
+            <div id="floorPlan">Plan layout will appear here</div>
+
+            <h2>3D Visualization</h2>
+            <div class="threeD" id="threeDView"></div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Construction Management System | All rights reserved.</p>
+    </footer>
+
+    <script>
+        function generatePlan() {
+            const plotWidth = parseFloat(document.getElementById('plotWidth').value);
+            const plotLength = parseFloat(document.getElementById('plotLength').value);
+            const numFloors = parseInt(document.getElementById('numFloors').value);
+            const totalArea = plotWidth * plotLength * numFloors;
+            const rooms = parseInt(document.getElementById('rooms').value);
+            const washrooms = parseInt(document.getElementById('washrooms').value);
+            const kitchens = parseInt(document.getElementById('kitchen').value);
+            const poojaRooms = parseInt(document.getElementById('pooja').value);
+            const livingRooms = parseInt(document.getElementById('livingRoom').value);
+            const hall = parseInt(document.getElementById('hall').value);
+            const dining = parseInt(document.getElementById('dining').value);
+            const stepsArea = parseFloat(document.getElementById('stepsArea').value);
+            const gardenArea = parseFloat(document.getElementById('gardenArea').value);
+            const roomArea = (totalArea - stepsArea - gardenArea) / (rooms + washrooms + kitchens + poojaRooms + livingRooms + hall + dining);
+
+            const floorPlan = document.getElementById('floorPlan');
+            floorPlan.innerHTML = ''; // Clear previous plans
+
+            // Generate rooms based on user input
+            for (let i = 0; i < rooms; i++) createRoom("Bedroom (NW)", roomArea, "bedroom");
+            for (let i = 0; i < washrooms; i++) createRoom("Washroom (WSW)", roomArea, "washroom");
+            for (let i = 0; i < kitchens; i++) createRoom("Kitchen (SE)", roomArea, "kitchen");
+            for (let i = 0; i < poojaRooms; i++) createRoom("Pooja Room (NE)", roomArea, "pooja");
+            for (let i = 0; i < livingRooms; i++) createRoom("Living Room (Center)", roomArea, "livingRoom");
+            for (let i = 0; i < hall; i++) createRoom("Hall", roomArea, "hall");
+            for (let i = 0; i < dining; i++) createRoom("Dining Hall", roomArea, "dining");
+
+            // Create Steps Area
+            createStairs(stepsArea);
+
+            // Create Garden Area
+            const gardenDiv = document.createElement('div');
+            gardenDiv.className = 'room garden';
+            gardenDiv.innerHTML = `<div>Garden Area</div><div>${gardenArea} m²</div>`;
+            floorPlan.appendChild(gardenDiv);
+
+            // Generate 3D visualization
+            generate3DView(rooms, washrooms, kitchens, poojaRooms, livingRooms, hall, dining, roomArea, stepsArea);
+        }
+
+        function createRoom(name, area, className) {
+            const floorPlan = document.getElementById('floorPlan');
+            const roomDiv = document.createElement('div');
+            roomDiv.className = 'room ' + className;
+            roomDiv.innerHTML = `<div>${name}</div><div>${area.toFixed(2)} m²</div>`;
+            // Adding doors and windows
+            const door = document.createElement('div');
+            door.className = 'door door-top';
+            door.innerText = 'Door';
+            roomDiv.appendChild(door);
+            const windowLeft = document.createElement('div');
+            windowLeft.className = 'window window-left';
+            windowLeft.innerText = 'Window';
+            roomDiv.appendChild(windowLeft);
+            const windowRight = document.createElement('div');
+            windowRight.className = 'window window-right';
+            windowRight.innerText = 'Window';
+            roomDiv.appendChild(windowRight);
+            floorPlan.appendChild(roomDiv);
+        }
+
+        function createStairs(stepsArea) {
+            const floorPlan = document.getElementById('floorPlan');
+            const stairsDiv = document.createElement('div');
+            stairsDiv.className = 'stairs';
+            stairsDiv.innerHTML = `<div>Staircase</div><div>${stepsArea} m²</div>`;
+            floorPlan.appendChild(stairsDiv);
+        }
+
+        function generate3DView(rooms, washrooms, kitchens, poojaRooms, livingRooms, hall, dining, roomArea, stepsArea) {
+            const threeDView = document.getElementById('threeDView');
+            threeDView.innerHTML = ''; // Clear previous 3D view
+
+            // Generate the 3D boxes based on the number of rooms
+            let totalRooms = rooms + washrooms + kitchens + poojaRooms + livingRooms + hall + dining + 1; // Include staircase
+
+            for (let i = 0; i < totalRooms; i++) {
+                const room3D = document.createElement('div');
+                room3D.className = 'room-3D';
+                room3D.innerHTML = `
+                    <div class="front">Room ${i + 1}<br>${(i < totalRooms - 1) ? roomArea.toFixed(2) : stepsArea.toFixed(2)} m²</div>
+                    <div class="back">Back</div>
+                    <div class="left">Left</div>
+                    <div class="right">Right</div>
+                    <div class="top">Top</div>
+                    <div class="bottom">Bottom</div>
+                `;
+                threeDView.appendChild(room3D);
+            }
+        }
+
+        function printPlan() {
+            const printContents = document.getElementById('floorPlan').outerHTML;
+            const originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = `
+                <div style="padding: 20px;">
+                    <h1>Generated Vastu-Compliant Floor Plan</h1>
+                    <h2>2D Floor Plan</h2>
+                    ${printContents}
+                </div>
+            `;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+        
+        
+</body>
+</html>

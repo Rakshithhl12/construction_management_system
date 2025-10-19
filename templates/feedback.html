@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Construction Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Basic Reset and Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Centered Main Heading */
+        .main-heading {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+            padding: 20px 0;
+            background-color: #004e92;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #004e92;
+            padding: 10px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            margin: 40px auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        /* Feedback Form */
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .feedback-form input, .feedback-form select, .feedback-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #fff;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .feedback-form label {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .feedback-form button {
+            width: 100%;
+            padding: 15px;
+            background-color: #00c6ff;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .feedback-form button:hover {
+            background-color: #00a1cc;
+        }
+       
+
+        /* Footer Section */
+        footer {
+            background-color: #004e92;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Heading Section -->
+    <div class="main-heading">
+        Construction Management System
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+<a href="{{ url_for('register') }}">Register</a>
+<a href="{{ url_for('about') }}">About Us</a>
+<a href="{{ url_for('contact') }}">Contact Us</a>
+<a href="{{ url_for('privacy') }}">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Feedback</h1>
+        <div class="feedback-form">
+            <form id="feedbackForm" action="/submit_feedback" method="POST">
+
+                <label for="feedbackTitle">Feedback Title</label>
+                <input type="text" id="feedbackTitle" name="feedbackTitle" placeholder="Enter Feedback Title" required>
+
+                <label for="feedbackRating">Rating</label>
+                <select id="feedbackRating" name="feedbackRating" required>
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+
+                <label for="feedbackDescription">Feedback Description</label>
+                <textarea id="feedbackDescription" name="feedbackDescription" placeholder="Provide your feedback" rows="4" required></textarea>
+
+                <label for="feedbackAuthor">Your Name</label>
+                <input type="text" id="feedbackAuthor" name="feedbackAuthor" placeholder="Enter your name" required>
+
+                <label for="feedbackEmail">Your Email</label>
+                <input type="email" id="feedbackEmail" name="feedbackEmail" placeholder="Enter your email" required>
+
+                <button type="submit">Submit Feedback</button>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="{{ category }}-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+            </form>
+
+           
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Construction Management System | All rights reserved.</p>
+    </footer>
+
+   
+    
+           
+</body>
+</html>

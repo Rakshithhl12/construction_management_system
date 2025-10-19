@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMS-Style Meeting Room</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <style>
+    /* General styles */
+    body {
+      margin: 0;
+      font-family: "Roboto", sans-serif;
+      background: linear-gradient(135deg, #f4f4f4, #e0e0e0);
+      color: #333;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #loginPage {
+      width: 400px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    #loginPage h1 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #333;
+    }
+
+    #loginPage input, #loginPage button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    #loginPage button {
+      background: #ffc107;
+      font-weight: 600;
+      color: #212529;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #loginPage button:hover {
+      background: #e0a800;
+    }
+
+    #meetingRoom {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      background: #f9f9f9;
+    }
+
+    header {
+      background: #212529;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+
+    header h1 {
+      font-size: 20px;
+    }
+
+    .icons i {
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+
+    .icons i:hover {
+      color: #ffc107;
+    }
+
+    .content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .video-section {
+      flex: 3;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      background: #f4f4f4;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .video-box {
+      flex: 1 1 calc(33.33% - 15px);
+      max-width: calc(33.33% - 15px);
+      background: black;
+      border-radius: 10px;
+      position: relative;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .video-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .username {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .status {
+      position: absolute;
+      bottom: 10px;
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 5px;
+      border-radius: 5px;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .chat-panel {
+      flex: 1;
+      background: #fff;
+      padding: 15px;
+      border-left: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chat-panel h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    #chatMessages {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    #chatInput {
+      display: flex;
+    }
+
+    #chatInput input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+
+    #chatInput button {
+      padding: 10px;
+      border: none;
+      background: #ffc107;
+      color: #212529;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #chatInput button:hover {
+      background: #e0a800;
+    }
+
+    .participant-panel {
+      flex: 1;
+      background: #fff;
+      padding: 15px;
+      border-left: 1px solid #ddd;
+      display: none;
+    }
+
+    .participant-list {
+      margin-top: 15px;
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+    }
+
+    .participant-item {
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #e9ecef;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="loginPage">
+    <h1>Meeting Login</h1>
+    <form id="loginForm">
+      <label class="input-label" for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter your name" required />
+      
+      <label class="input-label" for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required />
+      
+      <label class="input-label" for="meetingCode">Meeting Code</label>
+      <input type="text" id="meetingCode" placeholder="Enter meeting code" required />
+      <button type="submit">Join Meeting</button>
+    </form>
+  </div>
+
+  <!-- Meeting Room -->
+  <div id="meetingRoom">
+    <header>
+      <h1>Meeting Room</h1>
+      <div class="icons">
+        <i class="fas fa-microphone" id="toggleAudio" title="Mute/Unmute"></i>
+        <i class="fas fa-video" id="toggleVideo" title="Enable/Disable Video"></i>
+        <i class="fas fa-desktop" id="startScreenShare" title="Share Screen"></i>
+        <i class="fas fa-users" id="toggleParticipants" title="Show Participants"></i>
+        <i class="fas fa-share-alt" id="shareLink" title="Share Meeting Link"></i>
+        <i class="fas fa-sign-out-alt" id="leaveMeeting" title="Leave Meeting"></i>
+      </div>
+    </header>
+    <div class="content">
+      <div class="video-section" id="videoSection"></div>
+      <div class="chat-panel">
+        <h2>Chat</h2>
+        <div id="chatMessages"></div>
+        <div id="chatInput">
+          <input type="text" id="chatText" placeholder="Type a message..." />
+          <button id="sendChat">Send</button>
+        </div>
+      </div>
+      <div class="participant-panel" id="participantPanel">
+        <h2>Participants</h2>
+        <div id="participantList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginPage = document.getElementById("loginPage");
+    const meetingRoom = document.getElementById("meetingRoom");
+    const videoSection = document.getElementById("videoSection");
+    const chatMessages = document.getElementById("chatMessages");
+    const participantList = document.getElementById("participantList");
+    const toggleParticipantsButton = document.getElementById("toggleParticipants");
+    const leaveMeetingButton = document.getElementById("leaveMeeting");
+    const sendChatButton = document.getElementById("sendChat");
+    const shareLinkButton = document.getElementById("shareLink");
+    const startScreenShareButton = document.getElementById("startScreenShare");
+
+    let localStream;
+    let isAudioEnabled = true;
+    let isVideoEnabled = true;
+    let isScreenSharing = false;
+    let participants = [];
+
+    // Login functionality
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      loginPage.style.display = "none";
+      meetingRoom.style.display = "flex";
+      addParticipant(username, true, true);
+      await initializeLocalStream(username);
+    });
+
+    // Initialize local media stream
+    async function initializeLocalStream(username) {
+      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      addVideoBox(username, localStream, isAudioEnabled, isVideoEnabled);
+    }
+
+    // Add video box for a participant
+    function addVideoBox(username, stream, audioStatus, videoStatus) {
+      const videoBox = document.createElement("div");
+      videoBox.classList.add("video-box");
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.autoplay = true;
+      videoBox.appendChild(video);
+
+      const usernameDiv = document.createElement("div");
+      usernameDiv.classList.add("username");
+      usernameDiv.textContent = username;
+      videoBox.appendChild(usernameDiv);
+
+      const statusDiv = document.createElement("div");
+      statusDiv.classList.add("status");
+      const audioIcon = document.createElement("i");
+      audioIcon.classList.add("fas", audioStatus ? "fa-microphone" : "fa-microphone-slash");
+      const videoIcon = document.createElement("i");
+      videoIcon.classList.add("fas", videoStatus ? "fa-video" : "fa-video-slash");
+      statusDiv.appendChild(audioIcon);
+      statusDiv.appendChild(videoIcon);
+
+      videoBox.appendChild(statusDiv);
+      videoSection.appendChild(videoBox);
+    }
+
+    // Update participant list
+    function updateParticipantList() {
+      participantList.innerHTML = "";
+      participants.forEach((participant) => {
+        const participantItem = document.createElement("div");
+        participantItem.classList.add("participant-item");
+        participantItem.innerHTML = `${participant.username} <i class="fas ${participant.isAudioEnabled ? "fa-microphone" : "fa-microphone-slash"}"></i> <i class="fas ${participant.isVideoEnabled ? "fa-video" : "fa-video-slash"}"></i>`;
+        participantList.appendChild(participantItem);
+      });
+    }
+
+    // Add participant
+    function addParticipant(username, isAudioEnabled, isVideoEnabled) {
+      participants.push({ username, isAudioEnabled, isVideoEnabled });
+      updateParticipantList();
+    }
+
+    // Toggle audio
+    document.getElementById("toggleAudio").addEventListener("click", () => {
+      isAudioEnabled = !isAudioEnabled;
+      localStream.getAudioTracks().forEach((track) => (track.enabled = isAudioEnabled));
+      updateParticipantList();
+      updateVideoStatus();
+    });
+
+    // Toggle video
+    document.getElementById("toggleVideo").addEventListener("click", () => {
+      isVideoEnabled = !isVideoEnabled;
+      localStream.getVideoTracks().forEach((track) => (track.enabled = isVideoEnabled));
+      updateParticipantList();
+      updateVideoStatus();
+    });
+
+    // Update video status on the screen
+    function updateVideoStatus() {
+      const videoBoxes = document.querySelectorAll(".video-box");
+      videoBoxes.forEach((box) => {
+        const statusDiv = box.querySelector(".status");
+        const audioIcon = statusDiv.querySelector(".fa-microphone, .fa-microphone-slash");
+        const videoIcon = statusDiv.querySelector(".fa-video, .fa-video-slash");
+
+        audioIcon.classList.toggle("fa-microphone", isAudioEnabled);
+        audioIcon.classList.toggle("fa-microphone-slash", !isAudioEnabled);
+        videoIcon.classList.toggle("fa-video", isVideoEnabled);
+        videoIcon.classList.toggle("fa-video-slash", !isVideoEnabled);
+      });
+    }
+
+    // Start screen sharing
+    startScreenShareButton.addEventListener("click", async () => {
+      if (isScreenSharing) {
+        localStream.getTracks().forEach((track) => track.stop());
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        isScreenSharing = false;
+      } else {
+        localStream.getTracks().forEach((track) => track.stop());
+        localStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        isScreenSharing = true;
+      }
+      addVideoBox("ScreenShare", localStream, isAudioEnabled, isVideoEnabled);
+    });
+
+    // Share link via WhatsApp
+    shareLinkButton.addEventListener("click", () => {
+      const meetingLink = window.location.href;
+      window.open(`https://wa.me/?text=${encodeURIComponent(meetingLink)}`, "_blank");
+    });
+
+    // Toggle participant list visibility
+    toggleParticipantsButton.addEventListener("click", () => {
+      const participantPanel = document.getElementById("participantPanel");
+      participantPanel.style.display = participantPanel.style.display === "none" ? "block" : "none";
+    });
+
+    // Leave meeting
+    leaveMeetingButton.addEventListener("click", () => {
+      localStream.getTracks().forEach((track) => track.stop());
+      meetingRoom.style.display = "none";
+      loginPage.style.display = "block";
+    });
+
+    // Send chat message
+    sendChatButton.addEventListener("click", () => {
+      const message = document.getElementById("chatText").value;
+      if (message.trim()) {
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = message;
+        chatMessages.appendChild(messageDiv);
+        document.getElementById("chatText").value = "";
+      }
+    });
+  </script>
+</body>
+</html>
