@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping - Construction Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Main Heading Style */
+        .main-heading {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+            padding: 20px 0;
+            background-color: #004e92;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #004e92;
+            padding: 10px 0;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .container {
+            flex: 1;
+            margin: 40px auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .product-card {
+            background-color: #333;
+            width: 30%;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            width:250px;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+
+        .product-card .price {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: #ffbf00;
+        }
+
+        .product-card button {
+            background-color: #00c6ff;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .product-card button:hover {
+            background-color: #0099cc;
+        }
+
+        .bill-section, .payment-methods, .delivery-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .bill-section .total, .payment-methods label {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-top: 15px;
+        }
+
+        .bill-section .total {
+            font-size: 1.5rem;
+            color: #ffbf00;
+        }
+
+        .payment-methods select, .delivery-form input, .delivery-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .payment-methods button {
+            background-color: #00c6ff;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-methods button:hover {
+            background-color: #0099cc;
+        }
+
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #004e92;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Heading Section -->
+    <div class="main-heading">
+        Construction Management System
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Products Section -->
+        <div class="products">
+            <!-- Product Cards (9 materials) -->
+            <div class="product-card">
+                <img src="https://i.ibb.co/84hPW9Z/images.jpg" alt="images" border="0">
+                <h3>Material 1</h3>
+                <div class="price">₹200</div>
+                <button onclick="addToCart('Material 1', 200)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/3cQdkk8/images-1.jpg" alt="images-1" border="0">
+                <h3>Material 2</h3>
+                <div class="price">₹300</div>
+                <button onclick="addToCart('Material 2', 300)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/D7rp1PJ/images-2.jpg" alt="images-2" border="0">
+                <h3>Material 3</h3>
+                <div class="price">₹500</div>
+                <button onclick="addToCart('Material 3', 500)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/2gVZ1rt/images-3.jpg" alt="images-3" border="0">
+                <h3>Material 4</h3>
+                <div class="price">₹250</div>
+                <button onclick="addToCart('Material 4', 250)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/D5cW6xs/images-4.jpg" alt="images-4" border="0">
+                <h3>Material 5</h3>
+                <div class="price">₹400</div>
+                <button onclick="addToCart('Material 5', 400)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/MPrBFPW/images-6.jpg" alt="images-6" border="0">
+                <h3>Material 6</h3>
+                <div class="price">₹350</div>
+                <button onclick="addToCart('Material 6', 350)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/yfhzfJT/images-5.jpg" alt="images-5" border="0">
+                <h3>Material 7</h3>
+                <div class="price">₹550</div>
+                <button onclick="addToCart('Material 7', 550)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/C67cWdX/images-7.jpg" alt="images-7" border="0">
+                <h3>Material 8</h3>
+                <div class="price">₹150</div>
+                <button onclick="addToCart('Material 8', 150)">Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="https://i.ibb.co/Wtzw0RL/images-9.jpg" alt="images-9" border="0">
+                <h3>Material 9</h3>
+                <div class="price">₹600</div>
+                <button onclick="addToCart('Material 9', 600)">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- Bill Section -->
+        <div class="bill-section">
+            <h3>Bill Summary</h3>
+            <div id="billSummary"></div>
+            <div class="total">
+                Total: ₹<span id="totalAmount">0</span>
+            </div>
+        </div>
+
+        <!-- Payment Methods Section -->
+        <div class="payment-methods">
+            <h3>Select Payment Method</h3>
+            <label for="paymentMethod">Choose Payment Method:</label>
+            <select id="paymentMethod">
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="UPI">UPI</option>
+                <option value="Net Banking">Net Banking</option>
+                <option value="Cash on Delivery">Cash on Delivery</option>
+            </select>
+                        <button onclick="showDeliveryForm()">Proceed to Delivery</button>
+        </div>
+
+        <!-- Delivery Form Section -->
+        <div class="delivery-form" id="deliveryForm" style="display: none;">
+            <h3>Delivery Information</h3>
+            <label for="address">Delivery Address</label>
+            <input type="text" id="address" placeholder="Enter your address" required>
+            
+            <label for="contact">Contact Number</label>
+            <input type="text" id="contact" placeholder="Enter your contact number" required>
+
+            <label for="instructions">Special Instructions</label>
+            <textarea id="instructions" rows="4" placeholder="Any specific delivery instructions"></textarea>
+            
+            <button onclick="submitDeliveryInfo()">Submit Delivery Info</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Construction Management System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let cart = [];
+        let totalAmount = 0;
+    
+        // Function to add items to the cart
+        function addToCart(material, price) {
+            cart.push({ material, price });
+            totalAmount += price;
+            updateBill();
+        }
+    
+        // Function to update the bill summary
+        function updateBill() {
+            const billSummary = document.getElementById("billSummary");
+            billSummary.innerHTML = "";
+    
+            // Display each item in the cart
+            cart.forEach(item => {
+                const div = document.createElement("div");
+                div.innerHTML = `${item.material} - ₹${item.price}`;
+                billSummary.appendChild(div);
+            });
+    
+            // Update total amount
+            document.getElementById("totalAmount").innerText = `₹${totalAmount.toFixed(2)}`;
+        }
+    
+        // Function to show the delivery form
+        function showDeliveryForm() {
+            document.getElementById("deliveryForm").style.display = "block";
+        }
+    
+        // Function to handle delivery information submission
+        function submitDeliveryInfo() {
+            const address = document.getElementById("address").value;
+            const contact = document.getElementById("contact").value;
+            const instructions = document.getElementById("instructions").value;
+    
+            // Validate required fields
+            if (!address || !contact) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+    
+            // Display the delivery information
+            alert(`Delivery Info:\nAddress: ${address}\nContact: ${contact}\nSpecial Instructions: ${instructions}`);
+        }
+    </script>
+    
+</body>
+</html>
