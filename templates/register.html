@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Construction Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Basic Reset and Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Main Heading */
+        .main-heading {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+            padding: 20px 0;
+            background-color: #004e92;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header Section */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #004e92;
+            padding: 10px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 450px;
+            margin: 40px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .container h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #00c6ff;
+            font-size: 2rem;
+        }
+
+        /* Registration Form */
+        .registration-form input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+        .registration-form button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: #00c6ff;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .registration-form button:hover {
+            background-color: #00a1cc;
+        }
+
+        /* Success Message */
+        .success-message {
+            color: #32CD32;
+            font-size: 1rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: #004e92;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Heading -->
+    <div class="main-heading">
+        Construction Management System
+    </div>
+
+    <!-- Header Section -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Register</h1>
+        
+        <form class="registration-form" action="/submit_register" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="tel" name="phone" placeholder="Phone Number" required pattern="[0-9]{10}" title="Enter a 10-digit phone number">
+            <input type="text" name="role" placeholder="Role (e.g., Engineer, Manager)" required>
+            <button type="submit">Register</button>
+
+            <!-- Success Message (Visible on successful submission) -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{{ category }}-message success-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </form>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Construction Management System | All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
