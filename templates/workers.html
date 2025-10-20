@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Management - Construction Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Basic Reset and Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Centered Main Heading */
+        .main-heading {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+            padding: 20px 0;
+            background-color: #004e92;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #004e92;
+            padding: 10px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            margin: 40px auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        /* Worker Management Form */
+        .worker-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .worker-form input, .worker-form select, .worker-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #fff;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .worker-form label {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .worker-form button {
+            width: 100%;
+            padding: 15px;
+            background-color: #00c6ff;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .worker-form button:hover {
+            background-color: #00a1cc;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: #004e92;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Heading Section -->
+    <div class="main-heading">
+        Construction Management System
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Worker Management</h1>
+        <div class="worker-form">
+            <form id="workerForm" action="/add_worker" method="POST">
+                <label for="workerName">Worker Name</label>
+                <input type="text" id="workerName" name="workerName" placeholder="Enter Worker Name" required>
+
+                <label for="workerId">Worker ID</label>
+                <input type="text" id="workerId" name="workerId" placeholder="Enter Worker ID" required>
+
+                <label for="department">Department</label>
+                <select id="department" name="department" required>
+                    <option value="masonry">Masonry</option>
+                    <option value="carpentry">Carpentry</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="electrical">Electrical</option>
+                </select>
+
+                <label for="contactNumber">Contact Number</label>
+                <input type="tel" id="contactNumber" name="contactNumber" placeholder="Enter Contact Number" required>
+
+                <label for="dateOfJoining">Date of Joining</label>
+                <input type="date" id="dateOfJoining" name="dateOfJoining" required>
+
+                <label for="workerStatus">Status</label>
+                <select id="workerStatus" name="workerStatus" required>
+                    <option value="active">Active</option>
+                    <option value="on_leave">On Leave</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+
+                <label for="salary">Salary</label>
+                <input type="number" id="salary" name="salary" placeholder="Enter Monthly Salary" required>
+
+                <label for="performanceRating">Performance Rating</label>
+                <input type="number" id="performanceRating" name="performanceRating" placeholder="Enter Rating (1-10)" min="1" max="10">
+
+                <button type="submit">Add Worker</button>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{{ category }}-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </form>
+
+           
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Construction Management System | All rights reserved.</p>
+    </footer>
+   
+</body>
+</html>
